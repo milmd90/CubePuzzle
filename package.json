@@ -1,0 +1,23 @@
+{
+  "name": "CubePuzzle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milmd90/CubePuzzle.git"
+  },
+  "author": "milmd90",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/milmd90/CubePuzzle/issues"
+  },
+  "homepage": "https://github.com/milmd90/CubePuzzle#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}

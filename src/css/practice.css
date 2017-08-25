@@ -1,0 +1,16 @@
+div, span {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.menu div {
+    width: 100%;
+}
+
+.mainMenu h1 {
+    text-align: center;
+}
+
+#canvas {
+    float: right;
+}
