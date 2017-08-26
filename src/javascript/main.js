@@ -5,7 +5,7 @@
 var TotalTime = 0.0;
 
 // Camera parameters
-var CameraPos = {x: 0, y: 0, z:0};
+var Camera = {x: 0, y: 0, z:0};
 var RatioConst = 800;//320
 
 // Target frames per second, measured in fractions of seconds
@@ -123,7 +123,7 @@ function RenderLoop()
     // Callback to self after sleep-off time
     // Note that we convert back to seconds and then set this sleeping function
     TotalTime += CycleTime;
-    // timer = setTimeout(RenderLoop, SleepTime * 1000);
+    timer = setTimeout(RenderLoop, SleepTime * 1000);
 }
 
 function RenderBackground(r, g, b) {

@@ -1,7 +1,6 @@
 // Interface methods
 function Init() {
-    CameraPos = {x:0, y:0, z:10};
-    CameraRot = {x:0, y:0, z:0};
+    Camera = {x:0, y:0, r:10};
 }
 
 function RenderScene() {
@@ -79,18 +78,32 @@ function BlockToSquares(block) {
 }
 
 function SquareToImage(square) {
-    var cpx = CameraPos.x;
-    var cpy = CameraPos.y;
-    var cpz = CameraPos.z;
+    var crx = Camera.x;
+    var cry = Camera.y;
+    var cpr = Camera.r;
 
     var image = {
         points: [],
         color: square.color,
     };
     $.each(square.points, function (index, point) {
+        // X axis rot
+        var px1 = point.x;
+        var py1 = point.y * Math.cos(crx * Math.PI) - point.z * Math.sin(crx * Math.PI);
+        var pz1 = point.y * Math.sin(crx * Math.PI) + point.z * Math.cos(crx * Math.PI);
+
+        // Y axis rot
+        var px2 = px1 * Math.cos(cry * Math.PI) - pz1 * Math.sin(cry * Math.PI);
+        var py2 = py1;
+        var pz2 = px1 * Math.sin(cry * Math.PI) + pz1 * Math.cos(cry * Math.PI);
+
+        //Distance
+        var fz = (cpr - pz2);
+
+        // Projection
         image.points[index] = {};
-        image.points[index].x = 800 * (point.x - cpx) / (cpz - point.z) + CenterX;
-        image.points[index].y = 800 * (point.y - cpy) / (cpz - point.z) + CenterY;
+        image.points[index].x = 800 * px2 / fz + CenterX;
+        image.points[index].y = 800 * py2 / fz + CenterY;
     });
 
     return image;
