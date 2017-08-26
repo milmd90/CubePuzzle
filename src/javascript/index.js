@@ -1,7 +1,7 @@
 var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel"; //FF doesn't recognize mousewheel as of FF3.x
 
 $( document ).ready(function() {
-    var window = $( window );
+    var $window = $( window );
     var $body = $('body');
     var $menu = $('.menu');
     var $canvas = $('#canvas');
