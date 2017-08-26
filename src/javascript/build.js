@@ -1,6 +1,6 @@
 // Interface methods
 function Init() {
-    CameraPos = {x:0, y:0, z:100};
+    CameraPos = {x:0, y:0, z:10};
     CameraRot = {x:0, y:0, z:0};
 }
 
@@ -12,7 +12,7 @@ function RenderScene() {
     ctx.save();
 
     // Set width and cap style
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 5;
     ctx.lineCap = "butt";
     ctx.lineJoin = "round";
 
@@ -32,7 +32,16 @@ function RenderScene() {
 
     //
     $.each(squares, function (index, square) {
-        RenderImage(ctx, SquareToImage(square));
+        console.log("SQUARE");
+        $.each(square.points, function (index, point) {
+            console.log(" x: "+point.x+" y: "+point.y+" z: "+point.z);
+        });
+        var image = SquareToImage(square);
+        console.log("IMAGE");
+        $.each(image.points, function (index, point) {
+            console.log(" x: "+point.x+" y: "+point.y);
+        });
+        RenderImage(ctx, image);
     });
 
     // Revert context
@@ -40,7 +49,7 @@ function RenderScene() {
 }
 
 function BlockToSquares(block) {
-    var size = 100;
+    var size = 1;
 
     //Size cube
     var SizedVertex = [];
@@ -74,41 +83,46 @@ function SquareToImage(square) {
     var cpy = CameraPos.y;
     var cpz = CameraPos.z;
 
-
     var image = {
         points: [],
         color: square.color,
     };
     $.each(square.points, function (index, point) {
-    console.log(" x: "+point.x+" y: "+point.y+" z: "+point.z);
         image.points[index] = {};
-        image.points[index].x = (point.x - cpx) / (point.z - cpz);
-        image.points[index].y = (point.y - cpy) / (point.z - cpz);
+        image.points[index].x = 800 * (point.x - cpx) / (cpz - point.z) + CenterX;
+        image.points[index].y = 800 * (point.y - cpy) / (cpz - point.z) + CenterY;
     });
+
     return image;
 }
 
 function RenderImage(ctx, image) {
-    //
-    var color = image.color;
-    var points = image.points;
-
     // Set color
+    var color = image.color;
+    var c;
     if (color !== undefined) {
-        ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
+        c = ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
     } else {
         var R = Math.floor(Math.random() * 256);
         var G = Math.floor(Math.random() * 256);
         var B = Math.floor(Math.random() * 256);
-        ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
+        c = ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
     }
 
     // Draw from point to point
+    var points = image.points;
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     ctx.lineTo(points[1].x, points[1].y);
     ctx.lineTo(points[2].x, points[2].y);
     ctx.lineTo(points[3].x, points[3].y);
     ctx.closePath();
-    ctx.fill();
+
+    //Solid
+    // ctx.fillStyle = c;
+    // ctx.fill();
+
+    //Lines
+    ctx.strokeStyle = c;
+    ctx.stroke();
 }

@@ -24,5 +24,7 @@ var CubeFaces =
 
 var Objects =
 [
-    {x:1, y:1, z:1, h:1, l:1, w:1},
+    {x:1, y:0, z:0, h:1, l:1, w:1},
+    {x:0, y:2, z:1, h:1, l:1, w:1},
+    {x:0, y:0, z:5, h:1, l:1, w:1},
 ];
