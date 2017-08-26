@@ -18,33 +18,36 @@ function RenderScene() {
     // Render the background
     RenderBackground(0,0,0);
 
-    //
+    // Convert Objects to blocks
+    var blocks = []
+    $.each(Objects, function (index, object) {
+        var newBlocks = ObjectToBlocks(object);
+        blocks.push.apply(blocks, newBlocks);
+    });
+
+    // Convert blocks to squares
     var squares = [];
-    $.each(Objects, function (index, block) {
+    $.each(blocks, function (index, block) {
         var newSquares = BlockToSquares(block);
-        console.log(newSquares.length);
         squares.push.apply(squares, newSquares);
     });
 
     //Sort squares by distance
     //TODO
 
-    //
+    // Convert squares to images
     $.each(squares, function (index, square) {
-        console.log("SQUARE");
         $.each(square.points, function (index, point) {
-            console.log(" x: "+point.x+" y: "+point.y+" z: "+point.z);
         });
-        var image = SquareToImage(square);
-        console.log("IMAGE");
-        $.each(image.points, function (index, point) {
-            console.log(" x: "+point.x+" y: "+point.y);
-        });
-        RenderImage(ctx, image);
+        RenderImage(ctx, SquareToImage(square));
     });
 
     // Revert context
     ctx.restore();
+}
+
+function ObjectToBlocks(object) {
+    return [object];
 }
 
 function BlockToSquares(block) {

@@ -31,5 +31,7 @@ $( document ).ready(function() {
             return false;
         });
 
+    CreateSolution();
+
     Main();
 });
