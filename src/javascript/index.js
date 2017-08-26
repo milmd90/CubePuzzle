@@ -20,8 +20,8 @@ $( document ).ready(function() {
             var init_y = e.pageY;
 
             $window.mousemove(function(e) {
-                Camera.y += (e.pageX - init_x)/1000;
-                Camera.x += (e.pageY - init_y)/1000;
+                Camera.y += (e.pageX - init_x)/10000;
+                Camera.x += (e.pageY - init_y)/10000;
             });
 
             return false;

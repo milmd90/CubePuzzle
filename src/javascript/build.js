@@ -78,6 +78,7 @@ function BlockToSquares(block) {
 }
 
 function SquareToImage(square) {
+    var pi = Math.PI;
     var crx = Camera.x;
     var cry = Camera.y;
     var cpr = Camera.r;
@@ -89,13 +90,13 @@ function SquareToImage(square) {
     $.each(square.points, function (index, point) {
         // X axis rot
         var px1 = point.x;
-        var py1 = point.y * Math.cos(crx * Math.PI) - point.z * Math.sin(crx * Math.PI);
-        var pz1 = point.y * Math.sin(crx * Math.PI) + point.z * Math.cos(crx * Math.PI);
+        var py1 = point.y * Math.cos(crx * pi) - point.z * Math.sin(crx * pi);
+        var pz1 = point.y * Math.sin(crx * pi) + point.z * Math.cos(crx * pi);
 
         // Y axis rot
-        var px2 = px1 * Math.cos(cry * Math.PI) - pz1 * Math.sin(cry * Math.PI);
+        var px2 = px1 * Math.cos(cry * pi) - pz1 * Math.sin(cry * pi);
         var py2 = py1;
-        var pz2 = px1 * Math.sin(cry * Math.PI) + pz1 * Math.cos(cry * Math.PI);
+        var pz2 = px1 * Math.sin(cry * pi) + pz1 * Math.cos(cry * pi);
 
         //Distance
         var fz = (cpr - pz2);
