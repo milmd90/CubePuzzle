@@ -1,5 +1,3 @@
-/*** Public Variables (Read Only) ***/
-
 // Global timer used for animations; grows over time
 // Measured as fractions of seconds
 var TotalTime = 0.0;
@@ -19,8 +17,6 @@ var CanvasHeight;
 var CenterX;
 var CenterY;
 
-/*** Internal Functions & Variables ***/
-
 // FPS counter, refresh rate, and internal timer
 var FrameRateTime = 0;        // Seconds elapsed since last FPS post
 var FrameRateCount = 0;       // Number of frames since last FPS post
@@ -34,9 +30,7 @@ var ContextHandle = null;
 var BackCanvasHandle = null;
 var BackContextHandle = null;
 
-// Main application entry point; this MUST be called before any other functions
-// Calls the user overloaded "Init(...)" function and starts
-// the main render loop
+//
 function Main() {
     // Get context handles
     CanvasHandle = document.getElementById("canvas");
@@ -63,9 +57,7 @@ function Main() {
     RenderLoop();
 }
 
-// Main render loop
-// This should setup a timer at the end to call itself again
-// This function throttles itself to only update at a target FPS
+//
 function RenderLoop()
 {
     // Start timing this render cycle
@@ -126,6 +118,7 @@ function RenderLoop()
     timer = setTimeout(RenderLoop, SleepTime * 1000);
 }
 
+//
 function RenderBackground(r, g, b) {
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 }
