@@ -18,16 +18,9 @@ function RenderScene() {
     // Render the background
     RenderBackground(0,0,0);
 
-    // Convert Objects to blocks
-    var blocks = []
-    $.each(Objects, function (index, object) {
-        var newBlocks = ObjectToBlocks(object);
-        blocks.push.apply(blocks, newBlocks);
-    });
-
     // Convert blocks to squares
     var squares = [];
-    $.each(blocks, function (index, block) {
+    $.each(Blocks, function (index, block) {
         var newSquares = BlockToSquares(block);
         squares.push.apply(squares, newSquares);
     });
@@ -44,10 +37,6 @@ function RenderScene() {
 
     // Revert context
     ctx.restore();
-}
-
-function ObjectToBlocks(object) {
-    return [object];
 }
 
 function BlockToSquares(block) {
