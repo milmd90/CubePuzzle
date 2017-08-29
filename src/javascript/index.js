@@ -33,5 +33,5 @@ $( document ).ready(function() {
 
     FindSolutions();
 
-    // Main();
+    Main();
 });

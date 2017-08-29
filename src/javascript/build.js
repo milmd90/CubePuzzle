@@ -16,25 +16,22 @@ var Puzzle =
     {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:1, z:0},  c:{r:0, g:0, b:0}},  //light green
 ];
 
+var size = 20;
 var loc = {
-    x: 0,
-    y: 0,
-    z: 0,
+    x: size/2,
+    y: size/2,
+    z: size/2,
     d: 0
 };
 var taken = [];
-var size = 5;
 
 function FindSolutions() {
     console.log("FindSolutions");
-    for (var x = -size; x <= size; x++) {
-        console.log("FindSolutions x");
+    for (var x = 0; x <= size; x++) {
         taken[x] = [];
-        for (var y = -size; y <= size; y++) {
-            console.log("FindSolutions y");
+        for (var y = 0; y <= size; y++) {
             taken[x][y] = [];
-            for (var z = -size; z <= size; z++) {
-                console.log("FindSolutions z");
+            for (var z = 0; z <= size; z++) {
                 taken[x][y][z] = false;
             }
         }
@@ -50,7 +47,7 @@ function FindValid(index, loc, taken) {
     var piece = Puzzle[index];
 
     // For each of four possible rotations
-    for (var r = 0; r < 4; r++) {
+    for (var r = 0; r < 1; r++) {                                            //4
         console.log("Rotation "+r);
 
         //Rotate
@@ -63,11 +60,11 @@ function FindValid(index, loc, taken) {
         for (var i = 0; i < r; i++) {
             t = sx;
             sx = sy;
-            sy = -t;
+            sy = neg(t);
 
             t = px;
             px = py;
-            py = -t;
+            py = neg(t);
         }
         rot.s = {x:sx, y:sy, z:piece.s.z};
         rot.p = {x:px, y:py, z:piece.p.z};
@@ -77,48 +74,53 @@ function FindValid(index, loc, taken) {
         var rot2 = {};
         switch(loc.d) {
             case 0:
-                rot2.s = {x:rot.s.z, y:rot.s.y, z:-rot.s.x};
-                rot2.p = {x:rot.p.z, y:rot.p.y, z:-rot.p.x};
+                rot2.s = {x:rot.s.z, y:rot.s.y, z:neg(rot.s.x)};
+                rot2.p = {x:rot.p.z, y:rot.p.y, z:neg(rot.p.x)};
                 break;
             case 1:
-                rot2.s = {x:-rot.s.z, y:rot.s.y, z:rot.s.x};
-                rot2.p = {x:-rot.p.z, y:rot.p.y, z:rot.p.x};
+                rot2.s = {x:neg(rot.s.z), y:rot.s.y, z:rot.s.x};
+                rot2.p = {x:neg(rot.p.z), y:rot.p.y, z:rot.p.x};
                 break;
             case 2:
-                rot2.s = {x:rot.s.x, y:rot.s.z, z:-rot.s.y};
-                rot2.p = {x:rot.p.x, y:rot.p.z, z:-rot.p.y};
+                rot2.s = {x:rot.s.x, y:rot.s.z, z:neg(rot.s.y)};
+                rot2.p = {x:rot.p.x, y:rot.p.z, z:neg(rot.p.y)};
                 break;
             case 3:
-                rot2.s = {x:rot.s.x, y:-rot.s.z, z:rot.s.y};
-                rot2.p = {x:rot.p.x, y:-rot.p.z, z:rot.p.y};
+                rot2.s = {x:rot.s.x, y:neg(rot.s.z), z:rot.s.y};
+                rot2.p = {x:rot.p.x, y:neg(rot.p.z), z:rot.p.y};
                 break;
             case 4:
                 rot2.s = {x:rot.s.x, y:rot.s.y, z:rot.s.z};
                 rot2.p = {x:rot.p.x, y:rot.p.y, z:rot.p.z};
                 break;
             case 5:
-                rot2.s = {x:-rot.s.x, y:-rot.s.y, z:rot.s.z};
-                rot2.p = {x:-rot.p.x, y:-rot.p.y, z:rot.p.z};
+                rot2.s = {x:neg(rot.s.x), y:neg(rot.s.y), z:rot.s.z};
+                rot2.p = {x:neg(rot.p.x), y:neg(rot.p.y), z:rot.p.z};
                 break;
         }
 
         //Translate
         console.log("Translate");
-        rot2.s = {
-            x: rot2.s.x + loc.x,
-            x: rot2.s.y + loc.y,
-            x: rot2.s.z + loc.z,
-        };
+        rot2.s.x.map(function (val) {
+            return val + loc.x;
+        });
+        rot2.s.y.map(function (val) {
+            return val + loc.y;
+        });
+        rot2.s.z.map(function (val) {
+            return val + loc.z;
+        });
 
         // For each block in piece
         var valid = true;
+        var newTaken = taken.slice();
         $.each(rot2.s.x, function (i, x) {
             $.each(rot2.s.y, function (j, y) {
                 $.each(rot2.s.z, function (k, z) {
                     if (taken[x][y][z]) {
                         valid = false;;
                     } else {
-                        taken[x][y][z] = true;
+                        newTaken[x][y][z] = true;
                     }
                 });
             });
@@ -169,7 +171,7 @@ function FindValid(index, loc, taken) {
         // Finally, set the direction
         $.each(dir, function (i, z) {
             if (z) {
-                current = i;
+                current.d = i;
             }
         });
 
@@ -186,10 +188,45 @@ function FindValid(index, loc, taken) {
 
         // Add all soltuions from here...
         if (valid) {
-            console.log("Push");
-            sol.push(FindValid(index++, current, taken));
+            console.log("-------------VALID");
+            // sol.push(FindValid(index++, current, newTaken));
+        } else {
+            console.log("-------------INVALID");
         }
+
+        Blocks = SolutionToBlocks(newTaken);
     }
 
     return sol;
+}
+
+function SolutionToBlocks(t) {
+    var blocks = [];
+    console.log(t);
+    $.each(t, function (i, x) {
+        $.each(x, function (j, y) {
+            $.each(y, function (k, z) {
+                if (z) {
+                    blocks.push({
+                        x: i,
+                        y: j,
+                        z: k,
+                    });
+                }
+            });
+        });
+    });
+    console.log(blocks);
+    return blocks;
+}
+
+function neg(array) {
+    if (Array.isArray(array)) {
+        var n = [];
+        $.each(array, function (i, v) {
+            n.push(-1 * v);
+        });
+        return n;
+    }
+    return -1 * array;
 }
