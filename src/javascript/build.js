@@ -1,19 +1,19 @@
 var Puzzle =
 [
-    {s:{x:[0],      y:[0],      z:[0,1]},       p:{x:1, y:0, z:1},  c:{r:0, g:0, b:0}},  //green
-    {s:{x:[0],      y:[0,1],    z:[0,1]},       p:{x:1, y:0, z:1},  c:{r:0, g:0, b:0}},  //turqouise
-    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:1, z:0},  c:{r:0, g:0, b:0}},  //purple
-    {s:{x:[0],      y:[0],      z:[0,1]},       p:{x:1, y:0, z:1},  c:{r:0, g:0, b:0}},  //blue
+    {s:{x:[0],      y:[0],      z:[0,1]},       p:{x:1, y:0, z:1},  c:{R:0, G:255, B:255}},  //green
+    {s:{x:[0],      y:[0,1],    z:[0,1]},       p:{x:1, y:0, z:1},  c:{R:0, G:100, B:255}},  //turqouise
+    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:1, z:0},  c:{R:255, G:0, B:255}},  //purple
+    {s:{x:[0],      y:[0],      z:[0,1]},       p:{x:1, y:0, z:1},  c:{R:0, G:0, B:255}},  //blue
 
-    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:-1, y:0, z:0}, c:{r:0, g:0, b:0}},  //red
-    {s:{x:[0,1],    y:[0],      z:[0,1]},       p:{x:2, y:0, z:2},  c:{r:0, g:0, b:0}},  //yellow
-    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{r:0, g:0, b:0}},  //orange
-    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:0, z:1},  c:{r:0, g:0, b:0}},  //dark orange
+    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:-1, y:0, z:0}, c:{R:255, G:0, B:0}},  //red
+    {s:{x:[0,1],    y:[0],      z:[0,1]},       p:{x:2, y:0, z:2},  c:{R:100, G:255, B:0}},  //yellow
+    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{R:200, G:255, B:0}},  //orange
+    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:0, z:1},  c:{R:100, G:200, B:0}},  //dark orange
 
-    {s:{x:[0,1],    y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{r:0, g:0, b:0}},  //red
-    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:1, y:0, z:0},  c:{r:0, g:0, b:0}},  //purple
-    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{r:0, g:0, b:0}},  //lime
-    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:1, z:0},  c:{r:0, g:0, b:0}},  //light green
+    {s:{x:[0,1],    y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{R:255, G:0, B:0}},  //red
+    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:1, y:0, z:0},  c:{R:255, G:0, B:255}},  //purple
+    {s:{x:[0],      y:[0,1],    z:[0]},         p:{x:0, y:2, z:0},  c:{R:100, G:255, B:100}},  //lime
+    {s:{x:[0],      y:[0],      z:[0]},         p:{x:0, y:1, z:0},  c:{R:150, G:255, B:150}},  //light green
 ];
 
 var size = 20;
@@ -120,7 +120,7 @@ function FindValid(index, loc, taken) {
                     if (taken[x][y][z]) {
                         valid = false;;
                     } else {
-                        newTaken[x][y][z] = true;
+                        newTaken[x][y][z] = piece.c;
                     }
                 });
             });
@@ -211,12 +211,12 @@ function SolutionToBlocks(t) {
                         x: i,
                         y: j,
                         z: k,
+                        c: z
                     });
                 }
             });
         });
     });
-    console.log(blocks);
     return blocks;
 }
 

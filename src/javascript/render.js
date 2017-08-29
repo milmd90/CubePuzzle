@@ -30,8 +30,6 @@ function RenderScene() {
 
     // Convert squares to images
     $.each(squares, function (index, square) {
-        $.each(square.points, function (index, point) {
-        });
         RenderImage(ctx, SquareToImage(square));
     });
 
@@ -58,7 +56,7 @@ function BlockToSquares(block) {
     $.each(CubeFaces, function(index, face) {
         Squares[index] = {
             points: [],
-            color: block.color,
+            c: block.c,
         };
         Squares[index].points[0] = SizedVertex[face.a];
         Squares[index].points[1] = SizedVertex[face.b];
@@ -77,8 +75,9 @@ function SquareToImage(square) {
 
     var image = {
         points: [],
-        color: square.color,
+        c: square.c,
     };
+
     $.each(square.points, function (index, point) {
         // X axis rot
         var px1 = point.x;
@@ -104,7 +103,7 @@ function SquareToImage(square) {
 
 function RenderImage(ctx, image) {
     // Set color
-    var color = image.color;
+    var color = image.c;
     var c;
     if (color !== undefined) {
         c = ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
@@ -125,10 +124,10 @@ function RenderImage(ctx, image) {
     ctx.closePath();
 
     //Solid
-    // ctx.fillStyle = c;
-    // ctx.fill();
+    ctx.fillStyle = c;
+    ctx.fill();
 
     //Lines
-    ctx.strokeStyle = c;
+    ctx.strokeStyle = "rgb(255, 255, 255)";
     ctx.stroke();
 }
