@@ -58,18 +58,19 @@ function SquareToImage(square) {
 }
 
 function RenderImage(image) {
-    // Set color
     var ctx = BackContextHandle;
+
+    // Set color and line width
     var color = image.c;
-    var c;
     if (color !== undefined) {
-        c = ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
+        ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
     } else {
         var R = Math.floor(Math.random() * 256);
         var G = Math.floor(Math.random() * 256);
         var B = Math.floor(Math.random() * 256);
-        c = ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
+        ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
     }
+    ctx.lineWidth = 100 / image.d;
 
     // Draw from point to point
     var points = image.points;
@@ -79,10 +80,6 @@ function RenderImage(image) {
     ctx.lineTo(points[2].x, points[2].y);
     ctx.lineTo(points[3].x, points[3].y);
     ctx.closePath();
-
-    // Finally fill and stroke
-    ctx.fillStyle = c;
-    ctx.lineWidth = 100 / image.d;
     ctx.fill();
     ctx.stroke();
 }

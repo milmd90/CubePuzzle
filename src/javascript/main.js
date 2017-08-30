@@ -42,7 +42,9 @@ function UpdateRender()
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 
     // RenderSquares
+    BackContextHandle.save();
     RenderSquares();
+    BackContextHandle.restore();
 
     // Swap the backbuffer with the frontbuffer
     var ImageData = BackContextHandle.getImageData(0, 0, CanvasWidth, CanvasHeight);
