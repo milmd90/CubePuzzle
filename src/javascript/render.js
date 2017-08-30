@@ -1,19 +1,8 @@
 var Squares;
 
 function RenderSquares() {
-    // Shortext context handle
-    var ctx = BackContextHandle;
-
     // Save context
-    ctx.save();
-
-    // Set width and cap style
-    ctx.lineCap = "butt";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "rgb(255, 255, 255)";
-
-    // Render the background
-    RenderBackground(0,0,0);
+    BackContextHandle.save();
 
     // Convert squares to images
     var images = [];
@@ -25,11 +14,11 @@ function RenderSquares() {
         return -(a.d - b.d);
     });
     $.each(images, function (index, image) {
-        RenderImage(ctx, image);
+        RenderImage(image);
     });
 
     // Revert context
-    ctx.restore();
+    BackContextHandle.restore();
 }
 
 function SquareToImage(square) {
@@ -68,8 +57,9 @@ function SquareToImage(square) {
     return image;
 }
 
-function RenderImage(ctx, image) {
+function RenderImage(image) {
     // Set color
+    var ctx = BackContextHandle;
     var color = image.c;
     var c;
     if (color !== undefined) {
