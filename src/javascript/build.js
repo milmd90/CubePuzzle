@@ -23,10 +23,11 @@ var loc = {
     z: size/2,
     d: 0
 };
-var taken = [];
+var Blocks = [];
 
 function FindSolutions() {
     console.log("FindSolutions");
+    var taken = [];
     for (var x = 0; x <= size; x++) {
         taken[x] = [];
         for (var y = 0; y <= size; y++) {
