@@ -11,7 +11,7 @@ function RenderSquares() {
     });
 
     images.sort(function(a, b) {
-        return -(a.d - b.d);
+        return b.d - a.d;
     });
     $.each(images, function (index, image) {
         RenderImage(image);
