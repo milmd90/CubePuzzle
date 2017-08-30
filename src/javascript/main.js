@@ -38,9 +38,6 @@ function Init() {
 // UpdateRender results
 function UpdateRender()
 {
-    // Clear backbuffer
-    BackContextHandle.clearRect(0, 0, CanvasWidth, CanvasHeight);
-
     // Set background
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 

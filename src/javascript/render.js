@@ -80,11 +80,9 @@ function RenderImage(image) {
     ctx.lineTo(points[3].x, points[3].y);
     ctx.closePath();
 
-    //Solid
+    // Finally fill and stroke
     ctx.fillStyle = c;
+    ctx.lineWidth = 100 / image.d;
     ctx.fill();
-
-    //Lines
-    ctx.lineWidth = 100 / image.d
     ctx.stroke();
 }
