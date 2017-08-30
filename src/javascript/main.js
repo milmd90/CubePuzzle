@@ -31,7 +31,7 @@ var BackCanvasHandle = null;
 var BackContextHandle = null;
 
 //
-function Main() {
+function Init() {
     // Get context handles
     CanvasHandle = document.getElementById("canvas");
     ContextHandle = CanvasHandle.getContext("2d");
@@ -43,20 +43,17 @@ function Main() {
     // Get the canvas center
     CenterX = CanvasWidth / 2;
     CenterY = CanvasHeight / 2;
+    Camera = {x:0, y:0, r:10};
 
     // Create an image backbuffer
     BackCanvasHandle = document.createElement("canvas");
     BackCanvasHandle.width = CanvasWidth;
     BackCanvasHandle.height = CanvasHeight;
     BackContextHandle = BackCanvasHandle.getContext("2d");
-
-    // Init and render
-    Init();
-    Render();
 }
 
-// Render results
-function Render()
+// UpdateRender results
+function UpdateRender()
 {
     // Clear backbuffer
     BackContextHandle.clearRect(0, 0, CanvasWidth, CanvasHeight);
@@ -64,8 +61,8 @@ function Render()
     // Save context state
     BackContextHandle.save();
 
-    // Render the scene
-    RenderScene(BackContextHandle);
+    // RenderSquares
+    RenderSquares();
 
     // Restore the context state
     BackContextHandle.restore();

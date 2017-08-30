@@ -23,10 +23,10 @@ var loc = {
     z: size/2,
     d: 0
 };
-var Blocks = [];
 
 function FindSolutions() {
     console.log("FindSolutions");
+
     var taken = [];
     for (var x = 0; x <= size; x++) {
         taken[x] = [];
@@ -39,7 +39,7 @@ function FindSolutions() {
     }
 
     console.log("Calling FindValid");
-    var solutions = FindValid(0, loc, taken);
+    return FindValid(0, loc, taken);
 }
 
 function FindValid(index, loc, taken) {
@@ -167,8 +167,6 @@ function FindValid(index, loc, taken) {
             }
         });
 
-        console.log("Direction");
-
         // Finally, set the direction
         $.each(dir, function (i, z) {
             if (z) {
@@ -195,15 +193,14 @@ function FindValid(index, loc, taken) {
             console.log("-------------INVALID");
         }
 
-        Blocks = SolutionToBlocks(newTaken);
+        UpdateSolution(newTaken);
     }
 
     return sol;
 }
 
-function SolutionToBlocks(t) {
-    var blocks = [];
-    console.log(t);
+function UpdateSolution(t) {
+    blocks = [];
     $.each(t, function (i, x) {
         $.each(x, function (j, y) {
             $.each(y, function (k, z) {
@@ -218,7 +215,44 @@ function SolutionToBlocks(t) {
             });
         });
     });
-    return blocks;
+
+    // Convert blocks to squares
+    Squares = [];
+    $.each(blocks, function (index, block) {
+        var newSquares = BlockToSquares(block);
+        Squares.push.apply(Squares, newSquares);
+    });
+    RenderSquares();
+}
+
+function BlockToSquares(block) {
+    var size = 1;
+
+    //Size cube
+    var SizedVertex = [];
+    $.each(CubeVertex, function(index, vertex) {
+        var newVertex = {
+            x: vertex.x * size + block.x,
+            y: vertex.y * size + block.y,
+            z: vertex.z * size + block.z,
+        };
+        SizedVertex[index] = newVertex;
+    });
+
+    //
+    var squares = [];
+    $.each(CubeFaces, function(index, face) {
+        squares[index] = {
+            points: [],
+            c: block.c,
+        };
+        squares[index].points[0] = SizedVertex[face.a];
+        squares[index].points[1] = SizedVertex[face.b];
+        squares[index].points[2] = SizedVertex[face.c];
+        squares[index].points[3] = SizedVertex[face.d];
+    });
+
+    return squares;
 }
 
 function neg(array) {

@@ -1,19 +1,6 @@
-var Squares = [];
+var Squares;
 
-// Interface methods
-function Init() {
-    Camera = {x:0, y:0, r:10};
-
-    // Convert blocks to squares
-    $.each(Blocks, function (index, block) {
-        var newSquares = BlockToSquares(block);
-        Squares.push.apply(Squares, newSquares);
-    });
-    console.log("Squares", Squares);
-
-}
-
-function RenderScene() {
+function RenderSquares() {
     // Shortext context handle
     var ctx = BackContextHandle;
 
@@ -43,36 +30,6 @@ function RenderScene() {
 
     // Revert context
     ctx.restore();
-}
-
-function BlockToSquares(block) {
-    var size = 1;
-
-    //Size cube
-    var SizedVertex = [];
-    $.each(CubeVertex, function(index, vertex) {
-        var newVertex = {
-            x: vertex.x * size + block.x,
-            y: vertex.y * size + block.y,
-            z: vertex.z * size + block.z,
-        };
-        SizedVertex[index] = newVertex;
-    });
-
-    //
-    var squares = [];
-    $.each(CubeFaces, function(index, face) {
-        squares[index] = {
-            points: [],
-            c: block.c,
-        };
-        squares[index].points[0] = SizedVertex[face.a];
-        squares[index].points[1] = SizedVertex[face.b];
-        squares[index].points[2] = SizedVertex[face.c];
-        squares[index].points[3] = SizedVertex[face.d];
-    });
-
-    return squares;
 }
 
 function SquareToImage(square) {
