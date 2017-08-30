@@ -9,7 +9,6 @@ function Init() {
         var newSquares = BlockToSquares(block);
         Squares.push.apply(Squares, newSquares);
     });
-    Squares.sort(SquareSort);
     console.log("Squares", Squares);
 
 }
@@ -30,8 +29,16 @@ function RenderScene() {
     RenderBackground(0,0,0);
 
     // Convert squares to images
+    var images = [];
     $.each(Squares, function (index, square) {
-        RenderImage(ctx, SquareToImage(square));
+        images.push(SquareToImage(square));
+    });
+
+    images.sort(function(a, b) {
+        return -(a.d - b.d);
+    });
+    $.each(images, function (index, image) {
+        RenderImage(ctx, image);
     });
 
     // Revert context
@@ -70,33 +77,35 @@ function BlockToSquares(block) {
 
 function SquareToImage(square) {
     var pi = Math.PI;
-    var crx = Camera.x;
-    var cry = Camera.y;
-    var cpr = Camera.r;
+    var cx = Camera.x;
+    var cy = Camera.y;
+    var cr = Camera.r;
 
     var image = {
         points: [],
         c: square.c,
+        d: 0
     };
 
     $.each(square.points, function (index, point) {
         // X axis rot
-        var px1 = point.x;
-        var py1 = point.y * Math.cos(crx * pi) - point.z * Math.sin(crx * pi);
-        var pz1 = point.y * Math.sin(crx * pi) + point.z * Math.cos(crx * pi);
+        var x1 = point.x;
+        var y1 = point.y * Math.cos(cx * pi) - point.z * Math.sin(cx * pi);
+        var z1 = point.y * Math.sin(cx * pi) + point.z * Math.cos(cx * pi);
 
         // Y axis rot
-        var px2 = px1 * Math.cos(cry * pi) - pz1 * Math.sin(cry * pi);
-        var py2 = py1;
-        var pz2 = px1 * Math.sin(cry * pi) + pz1 * Math.cos(cry * pi);
+        var x2 = x1 * Math.cos(cy * pi) - z1 * Math.sin(cy * pi);
+        var y2 = y1;
+        var z2 = x1 * Math.sin(cy * pi) + z1 * Math.cos(cy * pi);
 
         //Distance
-        var fz = (cpr - pz2);
+        var fz = (cr - z2);
 
         // Projection
         image.points[index] = {};
-        image.points[index].x = 800 * px2 / fz + CenterX;
-        image.points[index].y = 800 * py2 / fz + CenterY;
+        image.points[index].x = 800 * x2 / fz + CenterX;
+        image.points[index].y = 800 * y2 / fz + CenterY;
+        image.d += fz;
     });
 
     return image;
@@ -131,50 +140,4 @@ function RenderImage(ctx, image) {
     //Lines
     ctx.strokeStyle = "rgb(255, 255, 255)";
     ctx.stroke();
-}
-
-function SquareSort(a, b) {
-    // // X axis rot
-    // var px1 = point.x;
-    // var py1 = point.y * Math.cos(crx * pi) - point.z * Math.sin(crx * pi);
-    // var pz1 = point.y * Math.sin(crx * pi) + point.z * Math.cos(crx * pi);
-    //
-    // // Y axis rot
-    // var px2 = px1 * Math.cos(cry * pi) - pz1 * Math.sin(cry * pi);
-    // var py2 = py1;
-    // var pz2 = px1 * Math.sin(cry * pi) + pz1 * Math.cos(cry * pi);
-
-    var camx = Camera.x;
-    var camy = Camera.y;
-    var camz = Camera.r;
-
-    //Calc first square
-    var x = 0;
-    var y = 0;
-    var z = 0;
-    $.each(a.points, function (i, point) {
-        x += point.x;
-        y += point.y;
-        z += point.z;
-    });
-    var f = Math.sqrt(
-        Math.pow(x/4 - camx, 2) +
-        Math.pow(y/4 - camy, 2) +
-        Math.pow(z/4 - camz, 2));
-
-    //Calc second square
-    x = 0;
-    y = 0;
-    z = 0;
-    $.each(b.points, function (i, point) {
-        x += point.x;
-        y += point.y;
-        z += point.z;
-    });
-    var s = Math.sqrt(
-        Math.pow(x/4 - camx, 2) +
-        Math.pow(y/4 - camy, 2) +
-        Math.pow(z/4 - camz, 2));
-
-    return -(f - s);
 }
