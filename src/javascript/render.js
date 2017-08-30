@@ -8,9 +8,9 @@ function RenderSquares() {
     ctx.save();
 
     // Set width and cap style
-    ctx.lineWidth = 5;
     ctx.lineCap = "butt";
     ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgb(255, 255, 255)";
 
     // Render the background
     RenderBackground(0,0,0);
@@ -95,6 +95,6 @@ function RenderImage(ctx, image) {
     ctx.fill();
 
     //Lines
-    ctx.strokeStyle = "rgb(255, 255, 255)";
+    ctx.lineWidth = 100 / image.d
     ctx.stroke();
 }
