@@ -22,8 +22,8 @@ $( document ).ready(function() {
             var init_y = e.pageY;
 
             $window.mousemove(function(e) {
-                Camera.y += (e.pageX - init_x)/10000;
-                Camera.x += (e.pageY - init_y)/10000;
+                Camera.y += (init_x - e.pageX)/10000;
+                Camera.x += (init_y - e.pageY)/10000;
                 UpdateRender();
             });
 
