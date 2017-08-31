@@ -63,7 +63,7 @@ function RenderImage(image) {
     // Set color and line width
     var color = image.c;
     if (color !== undefined) {
-        ctx.fillStyle = "rgb(" + color.R + "," + color.G + "," + color.B + ")";
+        ctx.fillStyle = color;
     } else {
         var R = Math.floor(Math.random() * 256);
         var G = Math.floor(Math.random() * 256);

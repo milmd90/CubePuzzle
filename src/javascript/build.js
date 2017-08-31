@@ -12,14 +12,15 @@ function FindSolutions() {
         }
     }
 
-    console.log("Calling FindValid");
-    return FindValid(0, loc, taken);
+    return FindValid(0, StartLocation, taken);
 }
 
 function FindValid(index, loc, taken) {
-    console.log("FindValid");
     var sol = [];
     var piece = Puzzle[index];
+    console.log("FindValid "+index);
+    console.log("piece "+JSON.stringify(piece));
+    console.log("location "+JSON.stringify(loc));
 
     // For each of four possible rotations
     for (var r = 0; r < 1; r++) {                                            //4
@@ -76,22 +77,33 @@ function FindValid(index, loc, taken) {
 
         //Translate
         console.log("Translate");
-        rot2.s.x.map(function (val) {
+        tran = {
+            s:{},
+            p:{},
+        };
+        tran.s.x = rot2.s.x.map(function (val) {
             return val + loc.x;
         });
-        rot2.s.y.map(function (val) {
+        tran.s.y = rot2.s.y.map(function (val) {
             return val + loc.y;
         });
-        rot2.s.z.map(function (val) {
+        tran.s.z = rot2.s.z.map(function (val) {
             return val + loc.z;
         });
+        tran.p.x ={
+            x: loc.x + rot2.p.x,
+            y: loc.y + rot2.p.y,
+            z: loc.z + rot2.p.z,
+        };
 
         // For each block in piece
         var valid = true;
         var newTaken = taken.slice();
-        $.each(rot2.s.x, function (i, x) {
-            $.each(rot2.s.y, function (j, y) {
-                $.each(rot2.s.z, function (k, z) {
+        console.log("Checking");
+        $.each(tran.s.x, function (i, x) {
+            $.each(tran.s.y, function (j, y) {
+                $.each(tran.s.z, function (k, z) {
+                    console.log(x, y, z);
                     if (taken[x][y][z]) {
                         valid = false;;
                     } else {
@@ -102,39 +114,39 @@ function FindValid(index, loc, taken) {
         });
 
         // Set next loc
-        var current = {
-            x:rot2.p.x,
-            y:rot2.p.y,
-            z:rot2.p.z,
+        var newLoc = {
+            x:tran.p.x,
+            y:tran.p.y,
+            z:tran.p.z,
         };
 
         // Find the next direction
         var dir = [true, true, true, true, true, true];
-        $.each(rot2.s.x, function (i, x) {
-            if (x == rot2.p.x) {
+        $.each(tran.s.x, function (i, x) {
+            if (x == tran.p.x) {
                 dir[0] = false;
                 dir[1] = false;
-            } else if (x > rot2.p.x) {
+            } else if (x > tran.p.x) {
                 dir[0] = false;
             } else {
                 dir[1] = false;
             }
         });
-        $.each(rot2.s.y, function (i, y) {
-            if (y == rot2.p.y) {
+        $.each(tran.s.y, function (i, y) {
+            if (y == tran.p.y) {
                 dir[2] = false;
                 dir[3] = false;
-            } else if (y > rot2.p.y) {
+            } else if (y > tran.p.y) {
                 dir[2] = false;
             } else {
                 dir[3] = false;
             }
         });
-        $.each(rot2.s.z, function (i, z) {
-            if (z == rot2.p.z) {
+        $.each(tran.s.z, function (i, z) {
+            if (z == tran.p.z) {
                 dir[4] = false;
                 dir[5] = false;
-            } else if (z > rot2.p.z) {
+            } else if (z > tran.p.z) {
                 dir[4] = false;
             } else {
                 dir[5] = false;
@@ -144,16 +156,16 @@ function FindValid(index, loc, taken) {
         // Finally, set the direction
         $.each(dir, function (i, z) {
             if (z) {
-                current.d = i;
+                newLoc.d = i;
             }
         });
 
         // Just for final piece, check endpoints
         if (index > Puzzle.length) {
-            if (!(current.x == 0 &&
-                  current.y == 0 &&
-                  current.z == -1 &&
-                  current.d == 4))
+            if (!(newLoc.x == 0 &&
+                  newLoc.y == 0 &&
+                  newLoc.z == -1 &&
+                  newLoc.d == 4))
             {
                 valid = false;
             }
@@ -162,7 +174,10 @@ function FindValid(index, loc, taken) {
         // Add all soltuions from here...
         if (valid) {
             console.log("-------------VALID");
-            // sol.push(FindValid(index++, current, newTaken));
+            setTimeout(function() {
+                sol.push(FindValid(++index, newLoc, newTaken));
+                UpdateRender();
+            }, 1000);
         } else {
             console.log("-------------INVALID");
         }
@@ -190,30 +205,52 @@ function UpdateSolution(t) {
         });
     });
 
+    //Center all the blocks
+    var minX, maxX, minY, maxY, minZ, maxZ;
+    $.each(blocks, function (index, block) {
+        if (!index) {
+            minX = maxX = block.x;
+            minY = maxY = block.y;
+            minZ = maxZ = block.z;
+        } else {
+            minX = block.x < minX ? minX : block.x;
+            maxX = block.x < maxX ? block.x : maxX;
+            minY = block.y < minY ? minY : block.y;
+            maxY = block.y < maxY ? block.y : maxY;
+            minZ = block.z < minZ ? minZ : block.z;
+            maxZ = block.z < maxZ ? block.z : maxZ;
+        }
+    });
+    var recenter = {
+        x: (minX+maxX)/2,
+        y: (minY+maxY)/2,
+        z: (minZ+maxZ)/2,
+    };
+
     // Convert blocks to squares
     Squares = [];
     $.each(blocks, function (index, block) {
-        var newSquares = BlockToSquares(block);
+        var newSquares = BlockToSquares(block, recenter);
         Squares.push.apply(Squares, newSquares);
     });
+
     RenderSquares();
 }
 
-function BlockToSquares(block) {
-    var size = 1;
-
+function BlockToSquares(block, recenter) {
     //Size cube
     var SizedVertex = [];
     $.each(CubeVertex, function(index, vertex) {
+        var vertexOffset = .5;
         var newVertex = {
-            x: vertex.x * size + block.x,
-            y: vertex.y * size + block.y,
-            z: vertex.z * size + block.z,
+            x: vertex.x + block.x - recenter.x - vertexOffset,
+            y: vertex.y + block.y - recenter.y - vertexOffset,
+            z: vertex.z + block.z - recenter.z - vertexOffset,
         };
         SizedVertex[index] = newVertex;
     });
 
-    //
+    // Make squares
     var squares = [];
     $.each(CubeFaces, function(index, face) {
         squares[index] = {
