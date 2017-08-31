@@ -32,7 +32,7 @@ function Init() {
     // Get the canvas center
     CenterX = CanvasWidth / 2;
     CenterY = CanvasHeight / 2;
-    Camera = {x:0, y:0, r:10};
+    Camera = {x:0, y:0, r:20};
 }
 
 // UpdateRender results

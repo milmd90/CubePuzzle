@@ -32,65 +32,68 @@ function FindValid(index, loc, taken) {
         var sy = piece.s.y;
         var px = piece.p.x;
         var py = piece.p.y;
+        var dx = piece.d.x;
+        var dy = piece.d.y;
         var t;
         for (var i = 0; i < r; i++) {
+            // Rotate blocks
             t = sx;
             sx = sy;
             sy = neg(t);
 
+            // Rotate next location
             t = px;
             px = py;
             py = neg(t);
+
+            // Rotate next direction
+            t = dx;
+            dx = dy;
+            dy = neg(t);
         }
         rot.s = {x:sx, y:sy, z:piece.s.z};
         rot.p = {x:px, y:py, z:piece.p.z};
+        rot.d = {x:dx, y:dy, z:piece.d.z};
 
         //Face correct direction
         console.log("Direction");
         var rot2 = {};
-        switch(loc.d) {
-            case 0:
-                rot2.s = {x:rot.s.z, y:rot.s.y, z:neg(rot.s.x)};
-                rot2.p = {x:rot.p.z, y:rot.p.y, z:neg(rot.p.x)};
-                break;
-            case 1:
-                rot2.s = {x:neg(rot.s.z), y:rot.s.y, z:rot.s.x};
-                rot2.p = {x:neg(rot.p.z), y:rot.p.y, z:rot.p.x};
-                break;
-            case 2:
-                rot2.s = {x:rot.s.x, y:rot.s.z, z:neg(rot.s.y)};
-                rot2.p = {x:rot.p.x, y:rot.p.z, z:neg(rot.p.y)};
-                break;
-            case 3:
-                rot2.s = {x:rot.s.x, y:neg(rot.s.z), z:rot.s.y};
-                rot2.p = {x:rot.p.x, y:neg(rot.p.z), z:rot.p.y};
-                break;
-            case 4:
-                rot2.s = {x:rot.s.x, y:rot.s.y, z:rot.s.z};
-                rot2.p = {x:rot.p.x, y:rot.p.y, z:rot.p.z};
-                break;
-            case 5:
-                rot2.s = {x:neg(rot.s.x), y:neg(rot.s.y), z:rot.s.z};
-                rot2.p = {x:neg(rot.p.x), y:neg(rot.p.y), z:rot.p.z};
-                break;
+        if (rot.d.x == 1){
+            rot2.s = {x:rot.s.z, y:rot.s.y, z:neg(rot.s.x)};
+            rot2.p = {x:rot.p.z, y:rot.p.y, z:neg(rot.p.x)};
+        } else if (rot.d.x == -1) {
+            rot2.s = {x:neg(rot.s.z), y:rot.s.y, z:rot.s.x};
+            rot2.p = {x:neg(rot.p.z), y:rot.p.y, z:rot.p.x};
+        } else if (rot.d.y == 1) {
+            rot2.s = {x:rot.s.x, y:rot.s.z, z:neg(rot.s.y)};
+            rot2.p = {x:rot.p.x, y:rot.p.z, z:neg(rot.p.y)};
+        } else if (rot.d.y == -1) {
+            rot2.s = {x:rot.s.x, y:neg(rot.s.z), z:rot.s.y};
+            rot2.p = {x:rot.p.x, y:neg(rot.p.z), z:rot.p.y};
+        } else if (rot.d.z == 1) {
+            rot2.s = {x:rot.s.x, y:rot.s.y, z:rot.s.z};
+            rot2.p = {x:rot.p.x, y:rot.p.y, z:rot.p.z};
+        } else if (rot.d.z == -1) {
+            rot2.s = {x:neg(rot.s.x), y:neg(rot.s.y), z:rot.s.z};
+            rot2.p = {x:neg(rot.p.x), y:neg(rot.p.y), z:rot.p.z};
         }
 
         //Translate
         console.log("Translate");
-        tran = {
+        var tran = {
             s:{},
             p:{},
         };
-        tran.s.x = rot2.s.x.map(function (val) {
+        tran.s.x = rot2.s.x.map(function(val) {
             return val + loc.x;
         });
-        tran.s.y = rot2.s.y.map(function (val) {
+        tran.s.y = rot2.s.y.map(function(val) {
             return val + loc.y;
         });
-        tran.s.z = rot2.s.z.map(function (val) {
+        tran.s.z = rot2.s.z.map(function(val) {
             return val + loc.z;
         });
-        tran.p.x ={
+        tran.p = {
             x: loc.x + rot2.p.x,
             y: loc.y + rot2.p.y,
             z: loc.z + rot2.p.z,
@@ -103,7 +106,6 @@ function FindValid(index, loc, taken) {
         $.each(tran.s.x, function (i, x) {
             $.each(tran.s.y, function (j, y) {
                 $.each(tran.s.z, function (k, z) {
-                    console.log(x, y, z);
                     if (taken[x][y][z]) {
                         valid = false;;
                     } else {
@@ -113,59 +115,53 @@ function FindValid(index, loc, taken) {
             });
         });
 
-        // Set next loc
-        var newLoc = {
-            x:tran.p.x,
-            y:tran.p.y,
-            z:tran.p.z,
-        };
-
-        // Find the next direction
-        var dir = [true, true, true, true, true, true];
-        $.each(tran.s.x, function (i, x) {
-            if (x == tran.p.x) {
-                dir[0] = false;
-                dir[1] = false;
-            } else if (x > tran.p.x) {
-                dir[0] = false;
-            } else {
-                dir[1] = false;
-            }
-        });
-        $.each(tran.s.y, function (i, y) {
-            if (y == tran.p.y) {
-                dir[2] = false;
-                dir[3] = false;
-            } else if (y > tran.p.y) {
-                dir[2] = false;
-            } else {
-                dir[3] = false;
-            }
-        });
-        $.each(tran.s.z, function (i, z) {
-            if (z == tran.p.z) {
-                dir[4] = false;
-                dir[5] = false;
-            } else if (z > tran.p.z) {
-                dir[4] = false;
-            } else {
-                dir[5] = false;
-            }
-        });
-
-        // Finally, set the direction
-        $.each(dir, function (i, z) {
-            if (z) {
-                newLoc.d = i;
-            }
-        });
+        // // Find the next direction
+        // var dir = [true, true, true, true, true, true];
+        // $.each(tran.s.x, function (i, x) {
+        //     if (x == tran.p.x) {
+        //         dir[0] = false;
+        //         dir[1] = false;
+        //     } else if (x > tran.p.x) {
+        //         dir[0] = false;
+        //     } else {
+        //         dir[1] = false;
+        //     }
+        // });
+        // $.each(tran.s.y, function (i, y) {
+        //     if (y == tran.p.y) {
+        //         dir[2] = false;
+        //         dir[3] = false;
+        //     } else if (y > tran.p.y) {
+        //         dir[2] = false;
+        //     } else {
+        //         dir[3] = false;
+        //     }
+        // });
+        // $.each(tran.s.z, function (i, z) {
+        //     if (z == tran.p.z) {
+        //         dir[4] = false;
+        //         dir[5] = false;
+        //     } else if (z > tran.p.z) {
+        //         dir[4] = false;
+        //     } else {
+        //         dir[5] = false;
+        //     }
+        // });
+        //
+        // // Finally, set the direction
+        // $.each(dir, function (i, z) {
+        //     if (z) {
+        //         console.log()
+        //         tran.p.d = i;
+        //     }
+        // });
 
         // Just for final piece, check endpoints
         if (index > Puzzle.length) {
-            if (!(newLoc.x == 0 &&
-                  newLoc.y == 0 &&
-                  newLoc.z == -1 &&
-                  newLoc.d == 4))
+            if (!(tran.p.x == 0 &&
+                  tran.p.y == 0 &&
+                  tran.p.z == -1 &&
+                  tran.p.d == 4))
             {
                 valid = false;
             }
@@ -175,7 +171,7 @@ function FindValid(index, loc, taken) {
         if (valid) {
             console.log("-------------VALID");
             setTimeout(function() {
-                sol.push(FindValid(++index, newLoc, newTaken));
+                sol.push(FindValid(++index, tran.p, newTaken));
                 UpdateRender();
             }, 1000);
         } else {
