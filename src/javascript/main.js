@@ -10,7 +10,7 @@ var ContextHandle = null;
 var BackCanvasHandle = null;
 var BackContextHandle = null;
 
-//
+// Initialize canvas, handlers, and camera
 function Init() {
     // Get context handles
     CanvasHandle = document.getElementById("canvas");
@@ -35,9 +35,8 @@ function Init() {
     Camera = {x:0, y:0, r:20};
 }
 
-// UpdateRender results
-function UpdateRender()
-{
+// UpdateRender renders whats in Squares and then updates the canvas
+function UpdateRender() {
     // Set background
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 

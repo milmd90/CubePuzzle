@@ -1,6 +1,4 @@
 function FindSolutions() {
-    console.log("FindSolutions");
-
     var taken = [];
     for (var x = 0; x <= size; x++) {
         taken[x] = [];
@@ -12,18 +10,17 @@ function FindSolutions() {
         }
     }
 
-    return FindValid(0, StartLocation, taken);
+    FindValid(0, StartLocation, taken);
 }
 
 function FindValid(index, loc, taken) {
-    var sol = [];
     var piece = Puzzle[index];
     console.log("FindValid "+index);
     console.log("piece "+JSON.stringify(piece));
     console.log("location "+JSON.stringify(loc));
 
     // For each of four possible rotations
-    for (var r = 0; r < 1; r++) {                                            //4
+    for (var r = 0; r < 4; r++) {
         console.log("Rotation "+r);
 
         //Rotate
@@ -101,7 +98,11 @@ function FindValid(index, loc, taken) {
 
         // For each block in piece
         var valid = true;
-        var newTaken = taken.slice();
+        var newTaken = taken.map(function(y) {
+            return y.map(function(z) {
+                return z.slice();
+            });
+        });
         console.log("Checking");
         $.each(tran.s.x, function (i, x) {
             $.each(tran.s.y, function (j, y) {
@@ -114,47 +115,6 @@ function FindValid(index, loc, taken) {
                 });
             });
         });
-
-        // // Find the next direction
-        // var dir = [true, true, true, true, true, true];
-        // $.each(tran.s.x, function (i, x) {
-        //     if (x == tran.p.x) {
-        //         dir[0] = false;
-        //         dir[1] = false;
-        //     } else if (x > tran.p.x) {
-        //         dir[0] = false;
-        //     } else {
-        //         dir[1] = false;
-        //     }
-        // });
-        // $.each(tran.s.y, function (i, y) {
-        //     if (y == tran.p.y) {
-        //         dir[2] = false;
-        //         dir[3] = false;
-        //     } else if (y > tran.p.y) {
-        //         dir[2] = false;
-        //     } else {
-        //         dir[3] = false;
-        //     }
-        // });
-        // $.each(tran.s.z, function (i, z) {
-        //     if (z == tran.p.z) {
-        //         dir[4] = false;
-        //         dir[5] = false;
-        //     } else if (z > tran.p.z) {
-        //         dir[4] = false;
-        //     } else {
-        //         dir[5] = false;
-        //     }
-        // });
-        //
-        // // Finally, set the direction
-        // $.each(dir, function (i, z) {
-        //     if (z) {
-        //         console.log()
-        //         tran.p.d = i;
-        //     }
-        // });
 
         // Just for final piece, check endpoints
         if (index > Puzzle.length) {
@@ -170,18 +130,13 @@ function FindValid(index, loc, taken) {
         // Add all soltuions from here...
         if (valid) {
             console.log("-------------VALID");
+            UpdateSolution(newTaken);
+
             setTimeout(function() {
-                sol.push(FindValid(++index, tran.p, newTaken));
-                UpdateRender();
+                FindValid(++index, tran.p, newTaken);
             }, 1000);
-        } else {
-            console.log("-------------INVALID");
         }
-
-        UpdateSolution(newTaken);
     }
-
-    return sol;
 }
 
 function UpdateSolution(t) {
@@ -230,7 +185,7 @@ function UpdateSolution(t) {
         Squares.push.apply(Squares, newSquares);
     });
 
-    RenderSquares();
+    UpdateRender();
 }
 
 function BlockToSquares(block, recenter) {
