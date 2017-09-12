@@ -20,10 +20,12 @@ $( document ).ready(function() {
         .mousedown(function(e) {
             var init_x = e.pageX;
             var init_y = e.pageY;
+            var c_x = Camera.x;
+            var c_y = Camera.y;
 
             $window.mousemove(function(e) {
-                Camera.y += (init_x - e.pageX)/10000;
-                Camera.x += (init_y - e.pageY)/10000;
+                Camera.y = c_y + (init_x - e.pageX)/1000;
+                Camera.x = c_x + (init_y - e.pageY)/1000;
                 UpdateRender();
             });
 

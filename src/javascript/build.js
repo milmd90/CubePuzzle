@@ -20,7 +20,7 @@ function FindValid(index, loc, taken) {
     console.log("location "+JSON.stringify(loc));
 
     // For each of four possible rotations
-    for (var r = 0; r < 4; r++) {
+    for (var r = 0; r < 1; r++) {
         console.log("Rotation "+r);
 
         //Rotate
@@ -133,7 +133,7 @@ function FindValid(index, loc, taken) {
             UpdateSolution(newTaken);
 
             setTimeout(function() {
-                FindValid(++index, tran.p, newTaken);
+                // FindValid(++index, tran.p, newTaken);
             }, 1000);
         }
     }
