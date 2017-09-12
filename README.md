@@ -1,1 +1,1 @@
-# CubePuzzle
+# cube-puzzle

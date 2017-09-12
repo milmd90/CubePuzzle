@@ -1,5 +1,5 @@
 {
-  "name": "CubePuzzle",
+  "name": "cube-puzzle",
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/milmd90/CubePuzzle.git"
+    "url": "git+https://github.com/milmd90/cube-puzzle.git"
   },
   "author": "milmd90",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/milmd90/CubePuzzle/issues"
+    "url": "https://github.com/milmd90/cube-puzzle/issues"
   },
-  "homepage": "https://github.com/milmd90/CubePuzzle#readme",
+  "homepage": "https://github.com/milmd90/cube-puzzle#readme",
   "dependencies": {
     "express": "^4.15.4"
   }
